@@ -4,43 +4,55 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Plan Risk Advisor</title>
-<link rel="manifest" href="/manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js');
-  }
-</script>
+<!-- Load PDF.js for reading PDF files -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
   body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; background: #f9f9f9; color: #333; }
   h1 { text-align: center; }
   .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-  textarea { width: 100%; height: 100px; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; font-size: 1rem; resize: vertical; }
-  button { margin-top: 1rem; width: 100%; padding: 1rem; background: #0969da; color: white; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; }
-  button:disabled { background: #ccc; cursor: wait; }
+  textarea { width: 100%; height: 150px; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; font-size: 1rem; resize: vertical; box-sizing: border-box; }
+  .btn-row { display: flex; gap: 10px; margin-top: 1rem; }
+  button { padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; transition: 0.2s; }
+  .btn-assess { flex: 1; background: #0969da; color: white; }
+  .btn-assess:disabled { background: #ccc; cursor: wait; }
+  .btn-icon { width: 60px; background: #eaeef2; color: #24292f; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+  .btn-icon:hover { background: #d0d7de; }
   .result { margin-top: 2rem; display: none; }
-  .risk-header { font-size: 2rem; font-weight: bold; text-align: center; margin-bottom: 1rem; }
+  .risk-header { font-size: 2.2rem; font-weight: bold; text-align: center; margin-bottom: 0.5rem; }
   .band-Low { color: #1a7f37; } .band-Moderate, .band-Elevated { color: #bf8700; } .band-High, .band-Severe { color: #cf222e; }
+  .summary-box { background: #f0f7ff; border-left: 4px solid #0969da; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px; font-size: 1.05rem; line-height: 1.5; color: #24292f; position: relative; }
+  .btn-speak { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 5px; }
   table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
   th, td { padding: 0.5rem; border-bottom: 1px solid #eee; text-align: left; font-size: 0.9rem; }
   th { background: #f6f8fa; }
   .stated { color: #1a7f37; } .assumed { color: #bf8700; } .missing { color: #cf222e; }
   .mit { background: #eefbf3; padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #1a7f37; }
   .loader { text-align: center; margin-top: 1rem; display: none; font-style: italic; color: #666; }
+  #fileInput { display: none; }
 </style>
 </head>
 <body>
   <h1>Plan Risk Advisor</h1>
   <div class="card">
-    <textarea id="plan" placeholder="e.g. I want to open a small restaurant in Lagos in 3 months with my savings. My sister will help cook. I have not yet found a location."></textarea>
-    <button id="btn" onclick="assess()">Assess Plan</button>
-    <div class="loader" id="loader">Analyzing plan with local AI (this may take a minute)...</div>
+    <textarea id="plan" placeholder="Type your plan, or click the 📎 button to upload a PDF or TXT file..."></textarea>
+    
+    <input type="file" id="fileInput" accept=".txt,.pdf" onchange="handleFileUpload(event)">
+    
+    <div class="btn-row">
+      <button type="button" class="btn-icon" onclick="document.getElementById('fileInput').click()" title="Upload File">📎</button>
+      <button id="btn" class="btn-assess" onclick="assess()">Assess Plan</button>
+    </div>
+    <div class="loader" id="loader">Analyzing plan with AI (this may take a moment)...</div>
     
     <div class="result" id="result">
       <div class="risk-header" id="risk-header"></div>
-      <div id="summary" style="background: #f0f7ff; border-left: 4px solid #0969da; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px; font-size: 1.05rem; line-height: 1.5; color: #24292f;"></div>
       <div style="text-align:center; margin-bottom:1rem; color:#666" id="confidence"></div>
+      
+      <div class="summary-box" id="summary-container" style="display:none;">
+        <button class="btn-speak" onclick="speakSummary()" title="Listen to Summary">🔊</button>
+        <div id="summary" style="padding-right: 30px;"></div>
+      </div>
+
       <table id="factors"></table>
       <div id="missing"></div>
       <div id="mitigations"></div>
@@ -49,14 +61,73 @@
   </div>
 
 <script>
+// --- PDF JS Setup ---
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+async function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const textarea = document.getElementById('plan');
+  textarea.value = "Extracting text from file...";
+
+  try {
+    if (file.type === "application/pdf" || file.name.endsWith('.pdf')) {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = "";
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        fullText += textContent.items.map(item => item.str).join(" ") + "\n";
+      }
+      textarea.value = fullText.trim();
+    } else {
+      // Assume text file
+      const text = await file.text();
+      textarea.value = text;
+    }
+  } catch (err) {
+    alert("Error reading file: " + err.message);
+    textarea.value = "";
+  }
+  event.target.value = ''; // reset input
+}
+
+// --- Text to Speech ---
+let currentUtterance = null;
+
+function speakSummary() {
+  const text = document.getElementById('summary').innerText;
+  if (!text) return;
+
+  // If already speaking, stop it
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    if (currentUtterance && currentUtterance.text === text) {
+      currentUtterance = null;
+      return; // Toggle off
+    }
+  }
+
+  currentUtterance = new SpeechSynthesisUtterance(text);
+  currentUtterance.rate = 1.0;
+  currentUtterance.pitch = 1.0;
+  window.speechSynthesis.speak(currentUtterance);
+}
+
+// --- Main Assessment Logic ---
 async function assess() {
   const plan = document.getElementById('plan').value.trim();
-  if (!plan) return alert('Please enter a plan');
+  if (!plan) return alert('Please enter a plan or upload a file');
   
   const btn = document.getElementById('btn');
   const loader = document.getElementById('loader');
   const result = document.getElementById('result');
   
+  // Stop any ongoing speech
+  window.speechSynthesis.cancel();
+
   btn.disabled = true;
   loader.style.display = 'block';
   result.style.display = 'none';
@@ -75,9 +146,17 @@ async function assess() {
     header.textContent = `${data.riskIndex.toFixed(1)}/10 — ${data.band}`;
     header.className = `risk-header band-${data.band}`;
     
-    document.getElementById('summary').innerText = data.summary;
     document.getElementById('confidence').textContent = 
       `Confidence: ${data.confidenceBand} (${data.confidence}) · Lenses: ${data.lenses.map(l => l.id).join(', ') || 'general'}`;
+
+    // Summary Box
+    const sumContainer = document.getElementById('summary-container');
+    if (data.summary) {
+      document.getElementById('summary').innerText = data.summary;
+      sumContainer.style.display = 'block';
+    } else {
+      sumContainer.style.display = 'none';
+    }
 
     // Table
     const tbody = data.factors.map(f => `
@@ -132,5 +211,3 @@ async function assess() {
 </script>
 </body>
 </html>
-
-
