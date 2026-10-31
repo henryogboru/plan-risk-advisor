@@ -1,0 +1,16 @@
+{
+  "id": "business", "name": "Starting a business", "domain": "business",
+  "trigger": { "keywords": ["business","startup","company","launch","customer","customers","client","clients","revenue","profit","loss","runway","co-founder","founder","investor","invest","capital","funding","product","service","market","sell","selling","buy","trade","shop","store","restaurant","cafe","food truck","salon","barbershop","kiosk","stall","vendor","supplier","stock","inventory","hire","staff","employee","payroll","licence","license","permit","open a","start a","run a","launch a","online store","e-commerce","freelance","consult","contract","pricing","margin","cash flow"], "phrases": ["open a","start a","run a","launch a","my business","my shop","my store","my company","my restaurant"] },
+  "weightOverrides": { "resource_adequacy": 0.14, "downside_severity": 0.12, "external_volatility": 0.09, "capability_fit": 0.09, "dependency_exposure": 0.08, "information_gaps": 0.09, "time_feasibility": 0.07, "concentration_risk": 0.07, "consistency": 0.05, "goal_clarity": 0.06, "opportunity_cost": 0.06, "feedback_visibility": 0.04, "energy_health": 0.02, "support_opposition": 0.02 },
+  "extraFactors": [
+    { "id": "demand_validated", "label": "Demand validated", "question": "Has anyone paid for this?" },
+    { "id": "runway_months", "label": "Runway", "question": "How many months of costs are covered?" },
+    { "id": "regulatory_clearance", "label": "Regulatory clearance", "question": "Are licences in place?" }
+  ],
+  "mitigations": [
+    { "id": "presell", "text": "Get 5 pre-orders or deposits before spending.", "factorIds": ["demand_validated","information_gaps","downside_severity"], "deltaLikelihood": -3, "effort": 2 },
+    { "id": "runway_calc", "text": "Write a 12-month cash plan including a zero-revenue month.", "factorIds": ["runway_months","resource_adequacy"], "deltaLikelihood": -2, "effort": 2 },
+    { "id": "licence_check", "text": "Confirm licence requirements in writing.", "factorIds": ["regulatory_clearance","external_volatility"], "deltaLikelihood": -2, "effort": 2 },
+    { "id": "kill_criteria", "text": "Define a measurable stop condition and review date.", "factorIds": ["feedback_visibility","downside_severity"], "deltaLikelihood": -2, "effort": 1 }
+  ]
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Risk Advisor</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
+</script>
+<style>
+  body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; background: #f9f9f9; color: #333; }
+  h1 { text-align: center; }
+  .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+  textarea { width: 100%; height: 100px; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; font-size: 1rem; resize: vertical; }
+  button { margin-top: 1rem; width: 100%; padding: 1rem; background: #0969da; color: white; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; }
+  button:disabled { background: #ccc; cursor: wait; }
+  .result { margin-top: 2rem; display: none; }
+  .risk-header { font-size: 2rem; font-weight: bold; text-align: center; margin-bottom: 1rem; }
+  .band-Low { color: #1a7f37; } .band-Moderate, .band-Elevated { color: #bf8700; } .band-High, .band-Severe { color: #cf222e; }
+  table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  th, td { padding: 0.5rem; border-bottom: 1px solid #eee; text-align: left; font-size: 0.9rem; }
+  th { background: #f6f8fa; }
+  .stated { color: #1a7f37; } .assumed { color: #bf8700; } .missing { color: #cf222e; }
+  .mit { background: #eefbf3; padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #1a7f37; }
+  .loader { text-align: center; margin-top: 1rem; display: none; font-style: italic; color: #666; }
+</style>
+</head>
+<body>
+  <h1>Plan Risk Advisor</h1>
+  <div class="card">
+    <textarea id="plan" placeholder="e.g. I want to open a small restaurant in Lagos in 3 months with my savings. My sister will help cook. I have not yet found a location."></textarea>
+    <button id="btn" onclick="assess()">Assess Plan</button>
+    <div class="loader" id="loader">Analyzing plan with local AI (this may take a minute)...</div>
+    
+    <div class="result" id="result">
+      <div class="risk-header" id="risk-header"></div>
+      <div style="text-align:center; margin-bottom:1rem; color:#666" id="confidence"></div>
+      <table id="factors"></table>
+      <div id="missing"></div>
+      <div id="mitigations"></div>
+      <p style="text-align:center; font-size:0.8rem; color:#888; margin-top:2rem" id="disclaimer"></p>
+    </div>
+  </div>
+
+<script>
+async function assess() {
+  const plan = document.getElementById('plan').value.trim();
+  if (!plan) return alert('Please enter a plan');
+  
+  const btn = document.getElementById('btn');
+  const loader = document.getElementById('loader');
+  const result = document.getElementById('result');
+  
+  btn.disabled = true;
+  loader.style.display = 'block';
+  result.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/assess', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    // Header
+    const header = document.getElementById('risk-header');
+    header.textContent = `${data.riskIndex.toFixed(1)}/10 — ${data.band}`;
+    header.className = `risk-header band-${data.band}`;
+    
+    document.getElementById('confidence').textContent = 
+      `Confidence: ${data.confidenceBand} (${data.confidence}) · Lenses: ${data.lenses.map(l => l.id).join(', ') || 'general'}`;
+
+    // Table
+    const tbody = data.factors.map(f => `
+      <tr>
+        <td>${f.label}</td>
+        <td>${f.likelihood}</td>
+        <td>${f.impact}</td>
+        <td>${(f.contribution).toFixed(2)}</td>
+        <td class="${f.source}">${f.source}</td>
+      </tr>
+    `).join('');
+    document.getElementById('factors').innerHTML = `
+      <tr><th>Factor</th><th>L</th><th>I</th><th>Impact</th><th>Source</th></tr>
+      ${tbody}
+    `;
+
+    // Missing
+    if (data.missingInfo.length > 0) {
+      document.getElementById('missing').innerHTML = `
+        <h3 style="color:#cf222e; margin-top:1.5rem">Missing Information</h3>
+        <ul>${data.missingInfo.map(m => `<li>${m}</li>`).join('')}</ul>
+      `;
+    } else {
+      document.getElementById('missing').innerHTML = '';
+    }
+
+    // Mitigations
+    if (data.mitigations.length > 0) {
+      document.getElementById('mitigations').innerHTML = `
+        <h3 style="color:#1a7f37; margin-top:1.5rem">Top Mitigations</h3>
+        ${data.mitigations.map(m => `
+          <div class="mit">
+            <strong>[Effort ${m.effort}]</strong> ${m.text} 
+            <span style="color:#1a7f37; float:right; font-weight:bold">(-${m.riskReduction.toFixed(2)})</span>
+          </div>
+        `).join('')}
+      `;
+    } else {
+      document.getElementById('mitigations').innerHTML = '';
+    }
+
+    document.getElementById('disclaimer').textContent = data.disclaimer;
+    result.style.display = 'block';
+
+  } catch (err) {
+    alert('Error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    loader.style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>
+

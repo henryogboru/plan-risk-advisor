@@ -1,0 +1,16 @@
+{
+  "id": "exam", "name": "Exam / study", "domain": "exam",
+  "trigger": { "keywords": ["exam","test","study","syllabus","revision","mock","jamb","waec","neco","sat","ielts","certification","past paper"], "phrases": ["pass my","sit for","prepare for the"] },
+  "weightOverrides": { "time_feasibility": 0.17, "information_gaps": 0.14, "consistency": 0.16, "capability_fit": 0.10, "energy_health": 0.09, "resource_adequacy": 0.07, "goal_clarity": 0.06, "dependency_exposure": 0.05, "support_opposition": 0.05, "downside_severity": 0.05, "concentration_risk": 0.02, "opportunity_cost": 0.02, "external_volatility": 0.01, "feedback_visibility": 0.01 },
+  "extraFactors": [
+    { "id": "syllabus_coverage", "label": "Syllabus coverage", "question": "What percent of the syllabus has been covered?" },
+    { "id": "baseline_performance", "label": "Baseline performance", "question": "Has a past paper been scored under exam conditions?" }
+  ],
+  "mitigations": [
+    { "id": "baseline_mock", "text": "Sit one past paper this week under timed conditions.", "factorIds": ["information_gaps","baseline_performance","feedback_visibility"], "deltaLikelihood": -3, "effort": 2 },
+    { "id": "syllabus_audit", "text": "Audit the syllabus and mark covered/partial/untouched.", "factorIds": ["syllabus_coverage","information_gaps"], "deltaLikelihood": -3, "effort": 2 },
+    { "id": "morning_sessions", "text": "Move two sessions per week to mornings.", "factorIds": ["consistency","energy_health"], "deltaLikelihood": -2, "effort": 2 },
+    { "id": "buffer_days", "text": "Book two leave days in the final week as buffer.", "factorIds": ["time_feasibility"], "deltaLikelihood": -2, "effort": 3 },
+    { "id": "study_partner", "text": "Weekly check-in with a study partner.", "factorIds": ["consistency","support_opposition"], "deltaLikelihood": -1, "effort": 1 }
+  ]
+}
