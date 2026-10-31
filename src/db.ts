@@ -1,6 +1,8 @@
 import Database from 'better-sqlite3';
 
-export const db = new Database('advisor.db');
+// Use /tmp for Vercel's read-only filesystem
+const dbPath = process.env.VERCEL ? '/tmp/advisor.db' : 'advisor.db';
+export const db = new Database(dbPath);
 db.exec(`
   CREATE TABLE IF NOT EXISTS assessments (
     id TEXT PRIMARY KEY,
