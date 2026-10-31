@@ -22,7 +22,8 @@ ${factorList}`;
     body: JSON.stringify({
       model: process.env.LLM_MODEL,
       messages: [{ role: 'user', content: prompt }],
-      temperature: 0.2
+      temperature: 0.2,
+      response_format: { type: "json_object" } // FORCES VALID JSON
     })
   });
 
@@ -33,6 +34,14 @@ ${factorList}`;
 
   const data = await res.json();
   let raw = data.choices[0].message.content || '{}';
+  
+  // Strip markdown if the AI adds it anyway
   raw = raw.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
-  return JSON.parse(raw);
+  
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error("Invalid JSON from AI:", raw);
+    throw new Error("The AI returned an invalid response. Please try again.");
+  }
 }
