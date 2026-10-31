@@ -3,9 +3,20 @@ dotenv.config();
 
 export async function estimateFactors(planText: string, factors: any[]) {
   const factorList = factors.map(f => `- id: ${f.id}\n  question: ${f.question}`).join('\n');
-  const prompt = `You are a risk estimator. Given a life plan and a list of risk factors, score each factor honestly.
+  
+  const prompt = `You are an expert risk estimator and strategic advisor. Given a life plan and a list of risk factors, score each factor honestly and write a summary.
+
 For each factor return likelihood (0-10), impact (0-10), source ("stated"|"assumed"|"missing"), evidence (quote or "").
-Return ONLY a JSON object keyed by factor id. Be honest about source. If plan says nothing, use source="missing", likelihood=5, impact=5.
+Return ONLY a JSON object with this exact shape:
+{
+  "summary": "A 2-3 sentence plain English breakdown, like a sports commentator analyzing a match. Highlight the biggest risk and tell them the single most important action to take.",
+  "factors": {
+    "goal_clarity": { "likelihood": 5, "impact": 5, "source": "assumed", "evidence": "" },
+    "time_feasibility": { "likelihood": 5, "impact": 5, "source": "assumed", "evidence": "" }
+    // ... all other factors
+  }
+}
+Be honest about source. If plan says nothing, use source="missing", likelihood=5, impact=5.
 
 PLAN:
 ${planText}
@@ -22,8 +33,8 @@ ${factorList}`;
     body: JSON.stringify({
       model: process.env.LLM_MODEL,
       messages: [{ role: 'user', content: prompt }],
-      temperature: 0.2,
-      response_format: { type: "json_object" } // FORCES VALID JSON
+      temperature: 0.3,
+      response_format: { type: "json_object" }
     })
   });
 
@@ -34,8 +45,6 @@ ${factorList}`;
 
   const data = await res.json();
   let raw = data.choices[0].message.content || '{}';
-  
-  // Strip markdown if the AI adds it anyway
   raw = raw.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
   
   try {

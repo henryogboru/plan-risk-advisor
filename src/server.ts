@@ -23,7 +23,7 @@ app.post('/api/assess', async (req, res) => {
     const llmResults = await estimateFactors(plan, merged.factors);
 
     const scores = merged.factors.map(f => {
-      const e = llmResults[f.id] || { likelihood: 5, impact: 5, source: 'missing', evidence: '' };
+      const e = (llmResults.factors && llmResults.factors[f.id]) || { likelihood: 5, impact: 5, source: 'missing', evidence: '' };
       const L = Math.min(10, Math.max(0, e.likelihood || 5));
       const I = Math.min(10, Math.max(0, e.impact || 5));
       const w = merged.weights[f.id] || 0;
@@ -47,6 +47,7 @@ app.post('/api/assess', async (req, res) => {
 
     res.json({
       id, riskIndex, band, confidence, confidenceBand: confBand,
+      summary: llmResults.summary || "Analysis complete.",
       lenses: matched.map(m => ({ id: m.lens.id, match: Math.round(m.match * 100) / 100 })),
       factors: scores.sort((a, b) => b.contribution - a.contribution),
       missingInfo, mitigations: mitigations.slice(0, 5),
