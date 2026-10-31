@@ -1,11 +1,14 @@
 {
+  "id": "/",
   "name": "Plan Risk Advisor",
   "short_name": "Risk Advisor",
   "description": "AI-powered risk assessment for your life, business, and study plans.",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#f9f9f9",
   "theme_color": "#0969da",
+  "categories": ["productivity", "utilities"],
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/192/1067/1067357.png",
@@ -18,6 +21,15 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1067/1067357.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Main App Screen"
     }
   ]
 }
