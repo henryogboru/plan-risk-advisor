@@ -85,7 +85,7 @@ export function mergeLenses(matched: any[]) {
   Object.keys(raw).forEach(k => weights[k] = raw[k] / sum);
 
   const mitigations = new Map();
-  matched.forEach(m => m.lens.mitigations?.forEach((mit: any) => mitigations.set(mit.id, mit)));
+  matched.forEach(m => m.lens.mitigations?.forEach((mit: any) => mitigations.set(mit.id, { ...mit, domain: m.lens.domain })));
 
   return { factors: Array.from(factorMap.values()), weights, mitigations: Array.from(mitigations.values()) };
 }
@@ -116,9 +116,18 @@ export function rankMitigations(mitigations: any[], scores: FactorScore[]) {
     
     return { ...m, isCritical, riskReduction: Math.round(red * 100) / 100, efficiency: m.effort > 0 ? red / m.effort : 0 };
   }).sort((a, b) => {
-    // CRITICAL OVERRIDE: If it addresses a catastrophic risk, it goes to the top
+    // 1. Absolute Priority: Health/Medical advice always comes first
+    const aIsHealth = a.domain === 'health' || a.domain === 'medical';
+    const bIsHealth = b.domain === 'health' || b.domain === 'medical';
+    if (aIsHealth && !bIsHealth) return -1;
+    if (!aIsHealth && bIsHealth) return 1;
+
+    // 2. Next Priority: Critical blockers
     if (a.isCritical && !b.isCritical) return -1;
     if (!a.isCritical && b.isCritical) return 1;
+
+    // 3. Finally: Sort by efficiency
     return b.efficiency - a.efficiency;
   });
 }
+
