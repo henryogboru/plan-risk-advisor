@@ -1,0 +1,35 @@
+{
+  "id": "events",
+  "name": "Events & Gatherings",
+  "domain": "events",
+  "trigger": {
+    "keywords": ["wedding", "event", "festival", "party", "guests", "venue", "catering", "invitations", "concert", "conference", "gala", "ceremony"],
+    "phrases": ["organizing a", "planning a", "hosting a"]
+  },
+  "weightOverrides": {
+    "external_volatility": 0.15,
+    "downside_severity": 0.14,
+    "resource_adequacy": 0.10,
+    "information_gaps": 0.10,
+    "time_feasibility": 0.10,
+    "dependency_exposure": 0.08,
+    "concentration_risk": 0.08,
+    "capability_fit": 0.05,
+    "goal_clarity": 0.05,
+    "support_opposition": 0.05,
+    "consistency": 0.03,
+    "feedback_visibility": 0.03,
+    "opportunity_cost": 0.02,
+    "energy_health": 0.02
+  },
+  "extraFactors": [
+    { "id": "weather_contingency", "label": "Weather contingency", "question": "Is there a backup plan for severe weather?", "defaultWeight": 0 },
+    { "id": "vendor_reliability", "label": "Vendor reliability", "question": "Are critical vendors (catering, equipment) locked in?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "buy_insurance", "text": "Purchase event cancellation and liability insurance immediately.", "factorIds": ["downside_severity", "external_volatility"], "deltaLikelihood": -3, "effort": 2 },
+    { "id": "secure_tents", "text": "Rent waterproof tents or secure an indoor backup venue.", "factorIds": ["weather_contingency", "external_volatility"], "deltaLikelihood": -4, "effort": 3 },
+    { "id": "vendor_contracts", "text": "Review vendor contracts for force majeure and refund clauses.", "factorIds": ["vendor_reliability", "dependency_exposure"], "deltaLikelihood": -2, "effort": 1 },
+    { "id": "emergency_fund", "text": "Set aside 15% of the budget as an emergency buffer.", "factorIds": ["resource_adequacy"], "deltaLikelihood": -2, "effort": 3 }
+  ]
+}

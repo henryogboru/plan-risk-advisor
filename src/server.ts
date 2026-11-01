@@ -41,7 +41,7 @@ app.post('/api/assess', async (req, res) => {
     
     let riskIndex = averageRisk;
     let criticalTriggerFired = false;
-    if (maxFactorRisk >= 8.5) {
+    if (maxFactorRisk >= 7.0) {
       // Catastrophic single-point failure detected. Bias heavily toward the max danger.
       riskIndex = (maxFactorRisk * 0.7) + (averageRisk * 0.3);
       criticalTriggerFired = true;
@@ -81,5 +81,6 @@ if (process.env.NODE_ENV !== 'production') {
   const PORT = 3000;
   app.listen(PORT, () => console.log(`\n🚀 Web App running at http://localhost:${PORT}\n`));
 }
+
 
 
