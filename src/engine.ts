@@ -8,6 +8,7 @@ export interface FactorScore {
 export interface Mitigation {
   id: string; text: string; factorIds: string[]; deltaLikelihood: number;
   deltaImpact: number; effort: number; riskReduction: number; efficiency: number;
+  isCritical?: boolean;
 }
 export interface Assessment {
   riskIndex: number; band: string; confidence: number; confidenceBand: string;
@@ -106,7 +107,7 @@ export function rankMitigations(mitigations: any[], scores: FactorScore[]) {
       if (!s) return;
       
       const rawRisk = (s.likelihood * s.impact) / 10;
-      if (rawRisk >= 7.0) isCritical = true; // If it addresses a critical risk, flag it!
+      if (rawRisk >= 7.0) isCritical = true; // Flag if it addresses a critical risk
       
       const nL = clamp(s.likelihood + (m.deltaLikelihood || 0));
       const nI = clamp(s.impact + (m.deltaImpact || 0));
@@ -115,11 +116,9 @@ export function rankMitigations(mitigations: any[], scores: FactorScore[]) {
     
     return { ...m, isCritical, riskReduction: Math.round(red * 100) / 100, efficiency: m.effort > 0 ? red / m.effort : 0 };
   }).sort((a, b) => {
-    // Critical mitigations always rank first, regardless of weight math
+    // CRITICAL OVERRIDE: If it addresses a catastrophic risk, it goes to the top
     if (a.isCritical && !b.isCritical) return -1;
     if (!a.isCritical && b.isCritical) return 1;
     return b.efficiency - a.efficiency;
   });
 }
-
-

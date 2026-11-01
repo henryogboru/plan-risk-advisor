@@ -1,6 +1,6 @@
 {
   "id": "travel", "name": "Travel & Relocation", "domain": "travel",
-  "trigger": { "keywords": ["travel", "fly", "moving", "relocate", "visa", "trip", "abroad", "passport", "luggage", "hotel", "flight", "backpacking"], "phrases": ["move to", "travel to", "go to"] },
+  "trigger": { "keywords": ["travel", "fly", "moving", "japan", "moving to", "relocating to", "immigrating", "relocate", "visa", "trip", "abroad", "passport", "luggage", "hotel", "flight", "backpacking"], "phrases": ["move to", "travel to", "go to"] },
   "weightOverrides": {
     "external_volatility": 0.16, "information_gaps": 0.14, "resource_adequacy": 0.12,
     "time_feasibility": 0.10, "dependency_exposure": 0.10, "downside_severity": 0.08,
@@ -18,3 +18,4 @@
     { "id": "check_advisory", "text": "Check your government's travel advisory for the destination.", "factorIds": ["safety_risk", "external_volatility"], "deltaLikelihood": -2, "effort": 1 }
   ]
 }
+
