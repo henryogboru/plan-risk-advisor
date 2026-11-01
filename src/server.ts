@@ -34,7 +34,17 @@ app.post('/api/assess', async (req, res) => {
       };
     });
 
-    const riskIndex = Math.round(scores.reduce((s, f) => s + f.contribution, 0) * 100) / 100;
+    // --- NEW CRITICAL TRIGGER MATHEMATICS ---
+    const averageRisk = scores.reduce((s, f) => s + f.contribution, 0);
+    const maxFactorRisk = Math.max(...scores.map(s => (s.likelihood * s.impact) / 10));
+    
+    let riskIndex = averageRisk;
+    if (maxFactorRisk >= 8.5) {
+      // Catastrophic single-point failure detected. Bias heavily toward the max danger.
+      riskIndex = (maxFactorRisk * 0.7) + (averageRisk * 0.3);
+    }
+    riskIndex = Math.round(riskIndex * 10) / 10;
+    
     const band = getBand(riskIndex);
     const confidence = Math.round(calculateConfidence(scores, matched) * 100) / 100;
     const confBand = confidence >= 0.75 ? 'High' : confidence >= 0.5 ? 'Medium' : 'Low';
@@ -67,3 +77,4 @@ if (process.env.NODE_ENV !== 'production') {
   const PORT = 3000;
   app.listen(PORT, () => console.log(`\n🚀 Web App running at http://localhost:${PORT}\n`));
 }
+

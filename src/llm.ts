@@ -16,7 +16,7 @@ Return ONLY a JSON object with this exact shape:
     // ... all other factors
   }
 }
-Be honest about source. If plan says nothing, use source="missing", likelihood=5, impact=5.
+Be honest about source. If the user explicitly states they have something (e.g., "I have the skills", "I have no legal barriers"), mark it as "stated". Only use "missing" if the plan says absolutely nothing about the factor.
 
 PLAN:
 ${planText}
@@ -54,3 +54,4 @@ ${factorList}`;
     throw new Error("The AI returned an invalid response. Please try again.");
   }
 }
+
