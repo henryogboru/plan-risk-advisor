@@ -14,3 +14,4 @@
     { "id": "kill_criteria", "text": "Define a measurable stop condition and review date.", "factorIds": ["feedback_visibility","downside_severity"], "deltaLikelihood": -2, "effort": 1 }
   ]
 }
+
