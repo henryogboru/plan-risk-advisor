@@ -1,0 +1,19 @@
+{
+  "id": "big_purchase", "name": "Big Purchases & Lifestyle", "domain": "big_purchase",
+  "trigger": { "keywords": ["buy a car", "boat", "luxury", "tattoo", "surgery", "plastic surgery", "expensive", "jewelry", "watch", "vacation home", "motorcycle"], "phrases": ["buy a", "purchase a", "get a"] },
+  "weightOverrides": {
+    "opportunity_cost": 0.18, "resource_adequacy": 0.16, "downside_severity": 0.14,
+    "information_gaps": 0.12, "external_volatility": 0.08, "time_feasibility": 0.08,
+    "capability_fit": 0.06, "goal_clarity": 0.06, "feedback_visibility": 0.04,
+    "concentration_risk": 0.04, "consistency": 0.02, "energy_health": 0.02
+  },
+  "extraFactors": [
+    { "id": "depreciation", "label": "Depreciation", "question": "Will this asset lose value immediately?", "defaultWeight": 0 },
+    { "id": "hidden_fees", "label": "Hidden fees", "question": "Are there maintenance, tax, or insurance costs?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "sleep_on_it", "text": "Wait 72 hours before making the purchase decision.", "factorIds": ["goal_clarity", "opportunity_cost"], "deltaLikelihood": -3, "effort": 1 },
+    { "id": "research_total_cost", "text": "Calculate the total cost of ownership (maintenance, insurance, taxes).", "factorIds": ["hidden_fees", "depreciation"], "deltaLikelihood": -3, "effort": 2 },
+    { "id": "negotiate", "text": "Always negotiate the price or look for a better deal.", "factorIds": ["resource_adequacy"], "deltaLikelihood": -2, "effort": 1 }
+  ]
+}

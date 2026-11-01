@@ -1,0 +1,20 @@
+{
+  "id": "property", "name": "Real Estate & Property", "domain": "property",
+  "trigger": { "keywords": ["house", "property", "rent", "landlord", "tenant", "mortgage", "real estate", "apartment", "renovation", "contractor", "down payment", "lease"], "phrases": ["buy a house", "rent an", "move in"] },
+  "weightOverrides": {
+    "resource_adequacy": 0.18, "information_gaps": 0.15, "downside_severity": 0.14,
+    "external_volatility": 0.10, "time_feasibility": 0.08, "dependency_exposure": 0.08,
+    "opportunity_cost": 0.08, "capability_fit": 0.06, "goal_clarity": 0.05,
+    "concentration_risk": 0.04, "feedback_visibility": 0.02, "consistency": 0.01,
+    "support_opposition": 0.01
+  },
+  "extraFactors": [
+    { "id": "inspection_status", "label": "Inspection status", "question": "Has the property been independently inspected?", "defaultWeight": 0 },
+    { "id": "hidden_costs", "label": "Hidden costs", "question": "Have you accounted for taxes, fees, and maintenance?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "get_inspection", "text": "Hire a certified independent inspector before signing.", "factorIds": ["inspection_status", "information_gaps"], "deltaLikelihood": -4, "effort": 2 },
+    { "id": "read_fine_print", "text": "Read the lease/mortgage carefully; check for hidden fees and penalties.", "factorIds": ["hidden_costs", "information_gaps"], "deltaLikelihood": -3, "effort": 1 },
+    { "id": "repair_fund", "text": "Keep a 3-month 'emergency repair' fund for unexpected damage.", "factorIds": ["resource_adequacy", "downside_severity"], "deltaLikelihood": -2, "effort": 3 }
+  ]
+}

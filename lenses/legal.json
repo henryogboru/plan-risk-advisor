@@ -1,0 +1,19 @@
+{
+  "id": "legal", "name": "Legal & Contracts", "domain": "legal", "regulated": true,
+  "trigger": { "keywords": ["contract", "lawsuit", "sue", "lawyer", "court", "attorney", "legal", "dispute", "settlement", "agreement", "liability"], "phrases": ["sign a", "take to court", "file a"] },
+  "weightOverrides": {
+    "information_gaps": 0.18, "downside_severity": 0.16, "capability_fit": 0.12,
+    "resource_adequacy": 0.10, "opportunity_cost": 0.10, "time_feasibility": 0.08,
+    "external_volatility": 0.06, "dependency_exposure": 0.06, "goal_clarity": 0.05,
+    "feedback_visibility": 0.04, "concentration_risk": 0.03, "support_opposition": 0.02
+  },
+  "extraFactors": [
+    { "id": "statute_of_limitations", "label": "Deadlines", "question": "Are there strict legal deadlines (statute of limitations)?", "defaultWeight": 0 },
+    { "id": "legal_fees", "label": "Legal fees", "question": "Do you understand the total cost of legal representation?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "consult_attorney", "text": "Consult an attorney before signing or filing anything.", "factorIds": ["capability_fit", "information_gaps"], "deltaLikelihood": -4, "effort": 3 },
+    { "id": "document_everything", "text": "Save all emails, texts, and receipts as evidence.", "factorIds": ["feedback_visibility", "information_gaps"], "deltaLikelihood": -2, "effort": 1 },
+    { "id": "mediation_first", "text": "Try mediation or negotiation before going to court.", "factorIds": ["opportunity_cost", "legal_fees"], "deltaLikelihood": -3, "effort": 2 }
+  ]
+}

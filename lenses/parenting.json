@@ -1,0 +1,19 @@
+{
+  "id": "parenting", "name": "Parenting & Family", "domain": "parenting",
+  "trigger": { "keywords": ["baby", "child", "pregnant", "adopt", "parenting", "toddler", "teenager", "school", "daycare", "nanny", "family"], "phrases": ["have a baby", "adopt a", "raise a"] },
+  "weightOverrides": {
+    "energy_health": 0.20, "resource_adequacy": 0.16, "consistency": 0.14,
+    "downside_severity": 0.10, "information_gaps": 0.10, "support_opposition": 0.08,
+    "time_feasibility": 0.06, "goal_clarity": 0.05, "capability_fit": 0.05,
+    "external_volatility": 0.02, "feedback_visibility": 0.02, "dependency_exposure": 0.02
+  },
+  "extraFactors": [
+    { "id": "village_support", "label": "Support network", "question": "Do you have reliable family or friends to help?", "defaultWeight": 0 },
+    { "id": "long_term_financial", "label": "Long-term finances", "question": "Can you support this for 18+ years?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "build_village", "text": "Build a reliable support network (family, friends, or paid sitters) before starting.", "factorIds": ["village_support", "energy_health"], "deltaLikelihood": -3, "effort": 3 },
+    { "id": "financial_planning", "text": "Create an 18-year financial plan and start a college fund immediately.", "factorIds": ["long_term_financial", "resource_adequacy"], "deltaLikelihood": -3, "effort": 2 },
+    { "id": "take_classes", "text": "Take parenting or preparation classes to reduce information gaps.", "factorIds": ["information_gaps", "capability_fit"], "deltaLikelihood": -2, "effort": 1 }
+  ]
+}

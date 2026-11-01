@@ -1,0 +1,19 @@
+{
+  "id": "tech", "name": "Tech & Software", "domain": "tech",
+  "trigger": { "keywords": ["app", "software", "code", "server", "cyber", "data", "ai", "deploy", "database", "hack", "security", "cloud", "website"], "phrases": ["build an app", "launch a website", "code a"] },
+  "weightOverrides": {
+    "information_gaps": 0.16, "capability_fit": 0.15, "time_feasibility": 0.12,
+    "downside_severity": 0.12, "resource_adequacy": 0.10, "external_volatility": 0.08,
+    "feedback_visibility": 0.08, "concentration_risk": 0.06, "goal_clarity": 0.05,
+    "consistency": 0.04, "opportunity_cost": 0.02, "dependency_exposure": 0.02
+  },
+  "extraFactors": [
+    { "id": "security_vulnerability", "label": "Security risk", "question": "Is there a risk of data breaches or hacking?", "defaultWeight": 0 },
+    { "id": "scalability", "label": "Scalability", "question": "Will the system crash if 1,000 users join at once?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "security_audit", "text": "Conduct a security audit or penetration test before launch.", "factorIds": ["security_vulnerability", "downside_severity"], "deltaLikelihood": -4, "effort": 3 },
+    { "id": "build_mvp", "text": "Build a Minimum Viable Product first; don't code the whole thing.", "factorIds": ["time_feasibility", "information_gaps"], "deltaLikelihood": -3, "effort": 2 },
+    { "id": "beta_test", "text": "Test with a small group of users before going public.", "factorIds": ["feedback_visibility", "scalability"], "deltaLikelihood": -2, "effort": 2 }
+  ]
+}
