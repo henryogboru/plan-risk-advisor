@@ -1,6 +1,9 @@
 {
   "id": "health", "name": "Health & Fitness", "domain": "health", "regulated": true,
-  "trigger": { "keywords": ["health", "diet", "workout", "marathon", "surgery", "doctor", "hospital", "habit", "weight", "gym", "injury", "therapy"], "phrases": ["lose weight", "run a", "get fit"] },
+  "trigger": { 
+    "keywords": ["health", "diet", "workout", "marathon", "surgery", "doctor", "hospital", "habit", "weight", "gym", "injury", "therapy", "allergy", "allergies", "peanut", "asthma", "medical", "condition", "chronic", "epipen", "disease", "illness"], 
+    "phrases": ["lose weight", "run a", "get fit", "allergic to"] 
+  },
   "weightOverrides": {
     "consistency": 0.16, "energy_health": 0.16, "downside_severity": 0.12,
     "goal_clarity": 0.10, "capability_fit": 0.10, "information_gaps": 0.08,
@@ -10,11 +13,11 @@
   },
   "extraFactors": [
     { "id": "medical_clearance", "label": "Medical clearance", "question": "Has a doctor approved this plan?", "defaultWeight": 0 },
-    { "id": "injury_risk", "label": "Injury risk", "question": "Is there a risk of physical injury or burnout?", "defaultWeight": 0 }
+    { "id": "injury_risk", "label": "Injury or health risk", "question": "Is there a risk of physical injury, allergic reaction, or burnout?", "defaultWeight": 0 }
   ],
   "mitigations": [
-    { "id": "consult_doctor", "text": "Consult a doctor or physiotherapist before starting.", "factorIds": ["medical_clearance", "injury_risk"], "deltaLikelihood": -4, "effort": 2 },
-    { "id": "start_slow", "text": "Build up intensity gradually over 3 weeks to avoid burnout.", "factorIds": ["consistency", "injury_risk"], "deltaLikelihood": -2, "effort": 2 },
-    { "id": "track_metrics", "text": "Track daily metrics (sleep, heart rate, weight) to spot issues early.", "factorIds": ["feedback_visibility"], "deltaLikelihood": -2, "effort": 1 }
+    { "id": "consult_doctor", "text": "Consult a doctor or specialist regarding your medical condition.", "factorIds": ["medical_clearance", "injury_risk"], "deltaLikelihood": -4, "effort": 2 },
+    { "id": "carry_meds", "text": "Ensure you have emergency medication (e.g., EpiPen) available at all times.", "factorIds": ["injury_risk"], "deltaLikelihood": -3, "effort": 1 },
+    { "id": "track_metrics", "text": "Track daily metrics (sleep, heart rate) to spot issues early.", "factorIds": ["feedback_visibility"], "deltaLikelihood": -2, "effort": 1 }
   ]
 }
