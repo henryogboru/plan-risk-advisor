@@ -1,6 +1,6 @@
 {
   "id": "exam", "name": "Exam / study", "domain": "exam",
-  "trigger": { "keywords": ["exam","test","study","syllabus","revision","mock","jamb","waec","neco","sat","ielts","certification","past paper"], "phrases": ["pass my","sit for","prepare for the"] },
+  "trigger": { "keywords": ["exam","midterm","final","study","syllabus","revision","mock","jamb","waec","neco","sat","ielts","certification","past paper"], "phrases": ["pass my","sit for","prepare for the"] },
   "weightOverrides": { "time_feasibility": 0.17, "information_gaps": 0.14, "consistency": 0.16, "capability_fit": 0.10, "energy_health": 0.09, "resource_adequacy": 0.07, "goal_clarity": 0.06, "dependency_exposure": 0.05, "support_opposition": 0.05, "downside_severity": 0.05, "concentration_risk": 0.02, "opportunity_cost": 0.02, "external_volatility": 0.01, "feedback_visibility": 0.01 },
   "extraFactors": [
     { "id": "syllabus_coverage", "label": "Syllabus coverage", "question": "What percent of the syllabus has been covered?" },
@@ -14,3 +14,4 @@
     { "id": "study_partner", "text": "Weekly check-in with a study partner.", "factorIds": ["consistency","support_opposition"], "deltaLikelihood": -1, "effort": 1 }
   ]
 }
+

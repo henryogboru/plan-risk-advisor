@@ -1,7 +1,7 @@
 {
   "id": "health", "name": "Health & Fitness", "domain": "health", "regulated": true,
   "trigger": { 
-    "keywords": ["health", "diet", "workout", "marathon", "surgery", "doctor", "hospital", "habit", "weight", "gym", "injury", "therapy", "allergy", "allergies", "peanut", "asthma", "medical", "condition", "chronic", "epipen", "disease", "illness"], 
+    "keywords": ["health", "diet", "workout", "marathon", "surgery", "doctor", "hospital", "habit", "weight", "gym", "injury", "therapy", "allergy", "allergies", "peanut", "asthma", "medical", "chronic", "epipen", "disease", "illness"], 
     "phrases": ["lose weight", "run a", "get fit", "allergic to"] 
   },
   "weightOverrides": {
@@ -21,3 +21,4 @@
     { "id": "track_metrics", "text": "Track daily metrics (sleep, heart rate) to spot issues early.", "factorIds": ["feedback_visibility"], "deltaLikelihood": -2, "effort": 1 }
   ]
 }
+
