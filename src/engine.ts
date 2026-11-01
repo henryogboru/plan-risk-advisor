@@ -49,7 +49,7 @@ export function matchLenses(planText: string, lenses: any[]) {
   return lenses.map(lens => {
     const kw = lens.trigger.keywords.filter((k: string) => t.includes(k.toLowerCase())).length;
     const ph = (lens.trigger.phrases || []).filter((p: string) => t.includes(p.toLowerCase())).length;
-    const match = Math.min(1.0, (kw * 0.15) + (ph * 0.30));
+    const match = Math.min(1.0, (kw * 0.25) + (ph * 0.35));
     return { lens, match };
   }).filter(m => m.match >= 0.25).sort((a, b) => b.match - a.match).slice(0, 3);
 }
@@ -110,3 +110,4 @@ export function rankMitigations(mitigations: any[], scores: FactorScore[]) {
     return { ...m, riskReduction: Math.round(red * 100) / 100, efficiency: m.effort > 0 ? red / m.effort : 0 };
   }).sort((a, b) => b.efficiency - a.efficiency);
 }
+

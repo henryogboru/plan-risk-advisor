@@ -1,6 +1,9 @@
 {
   "id": "relationships", "name": "Relationships & Family", "domain": "relationships",
-  "trigger": { "keywords": ["marriage", "divorce", "partner", "date", "dating", "family", "kids", "children", "move in", "breakup", "wife", "husband", "boyfriend", "girlfriend"], "phrases": ["get married", "have a baby", "move in with"] },
+  "trigger": { 
+    "keywords": ["marriage", "married", "divorce", "partner", "date", "dating", "family", "kids", "children", "move in", "breakup", "wife", "husband", "boyfriend", "girlfriend", "prenup", "wedding", "engagement", "engaged", "fiancé", "fiancee"], 
+    "phrases": ["get married", "getting married", "have a baby", "move in with", "knowing each other for"] 
+  },
   "weightOverrides": {
     "support_opposition": 0.16, "downside_severity": 0.14, "information_gaps": 0.12,
     "goal_clarity": 0.12, "consistency": 0.10, "external_volatility": 0.08,
