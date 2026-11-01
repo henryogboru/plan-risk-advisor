@@ -1,0 +1,20 @@
+{
+  "id": "education", "name": "Education & Learning", "domain": "education",
+  "trigger": { "keywords": ["degree", "bootcamp", "learn", "course", "university", "college", "certification", "coding", "language", "masters", "phd", "skills", "school"], "phrases": ["learn to", "go back to", "study for"] },
+  "weightOverrides": {
+    "time_feasibility": 0.16, "opportunity_cost": 0.14, "resource_adequacy": 0.12,
+    "consistency": 0.10, "capability_fit": 0.10, "goal_clarity": 0.08,
+    "information_gaps": 0.08, "energy_health": 0.08, "downside_severity": 0.06,
+    "feedback_visibility": 0.04, "dependency_exposure": 0.02, "support_opposition": 0.01,
+    "concentration_risk": 0.01
+  },
+  "extraFactors": [
+    { "id": "roi", "label": "Return on investment", "question": "Will this education directly lead to higher income or better opportunities?", "defaultWeight": 0 },
+    { "id": "accreditation", "label": "Accreditation", "question": "Is the institution or certification recognized by employers?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "verify_roi", "text": "Speak to 3 recent graduates to confirm job placement rates.", "factorIds": ["roi", "information_gaps"], "deltaLikelihood": -3, "effort": 2 },
+    { "id": "check_accreditation", "text": "Verify the institution's accreditation and industry reputation.", "factorIds": ["accreditation"], "deltaLikelihood": -3, "effort": 1 },
+    { "id": "time_commitment", "text": "Block out fixed study hours in your calendar before starting.", "factorIds": ["consistency", "time_feasibility"], "deltaLikelihood": -2, "effort": 2 }
+  ]
+}

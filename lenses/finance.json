@@ -1,0 +1,20 @@
+{
+  "id": "finance", "name": "Finance & Investments", "domain": "finance",
+  "trigger": { "keywords": ["invest", "stock", "crypto", "buy a house", "mortgage", "loan", "debt", "savings", "real estate", "portfolio", "trading", "retirement"], "phrases": ["invest in", "buy a", "put my money"] },
+  "weightOverrides": {
+    "downside_severity": 0.18, "concentration_risk": 0.14, "external_volatility": 0.12,
+    "information_gaps": 0.10, "resource_adequacy": 0.10, "time_feasibility": 0.08,
+    "goal_clarity": 0.08, "opportunity_cost": 0.06, "capability_fit": 0.06,
+    "feedback_visibility": 0.04, "dependency_exposure": 0.02, "consistency": 0.01,
+    "support_opposition": 0.01
+  },
+  "extraFactors": [
+    { "id": "liquidity", "label": "Liquidity", "question": "Can you access this money quickly if needed?", "defaultWeight": 0 },
+    { "id": "tax_implications", "label": "Tax implications", "question": "Have you considered the tax impact?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "diversify", "text": "Diversify across different assets to reduce concentration risk.", "factorIds": ["concentration_risk"], "deltaLikelihood": -4, "effort": 3 },
+    { "id": "emergency_fund", "text": "Never invest money you need in the next 6 months.", "factorIds": ["liquidity", "downside_severity"], "deltaLikelihood": -3, "effort": 2 },
+    { "id": "consult_tax", "text": "Consult a tax professional to understand the liabilities.", "factorIds": ["tax_implications"], "deltaLikelihood": -2, "effort": 2 }
+  ]
+}

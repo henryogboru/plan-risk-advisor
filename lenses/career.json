@@ -1,0 +1,20 @@
+{
+  "id": "career", "name": "Career & Jobs", "domain": "career",
+  "trigger": { "keywords": ["job", "career", "boss", "salary", "freelance", "quit", "promotion", "interview", "resume", "hired", "fired", "workplace", "remote work"], "phrases": ["quit my", "apply for", "change my"] },
+  "weightOverrides": {
+    "opportunity_cost": 0.14, "downside_severity": 0.12, "resource_adequacy": 0.10,
+    "information_gaps": 0.10, "capability_fit": 0.09, "time_feasibility": 0.08,
+    "external_volatility": 0.08, "dependency_exposure": 0.06, "consistency": 0.06,
+    "goal_clarity": 0.06, "feedback_visibility": 0.05, "support_opposition": 0.04,
+    "concentration_risk": 0.01, "energy_health": 0.01
+  },
+  "extraFactors": [
+    { "id": "financial_buffer", "label": "Financial buffer", "question": "Do you have 6 months of living expenses saved?", "defaultWeight": 0 },
+    { "id": "market_demand", "label": "Market demand", "question": "Are your skills currently in high demand?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "emergency_fund", "text": "Build a 6-month emergency fund before quitting.", "factorIds": ["financial_buffer", "downside_severity"], "deltaLikelihood": -3, "effort": 4 },
+    { "id": "network_first", "text": "Reach out to 5 people in your target industry before applying.", "factorIds": ["information_gaps", "market_demand"], "deltaLikelihood": -2, "effort": 2 },
+    { "id": "test_skills", "text": "Take on a small freelance project to test the market.", "factorIds": ["capability_fit", "market_demand"], "deltaLikelihood": -2, "effort": 2 }
+  ]
+}

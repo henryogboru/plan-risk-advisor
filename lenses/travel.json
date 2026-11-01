@@ -1,0 +1,20 @@
+{
+  "id": "travel", "name": "Travel & Relocation", "domain": "travel",
+  "trigger": { "keywords": ["travel", "fly", "moving", "relocate", "visa", "trip", "abroad", "passport", "luggage", "hotel", "flight", "backpacking"], "phrases": ["move to", "travel to", "go to"] },
+  "weightOverrides": {
+    "external_volatility": 0.16, "information_gaps": 0.14, "resource_adequacy": 0.12,
+    "time_feasibility": 0.10, "dependency_exposure": 0.10, "downside_severity": 0.08,
+    "capability_fit": 0.06, "goal_clarity": 0.06, "support_opposition": 0.04,
+    "consistency": 0.04, "feedback_visibility": 0.04, "opportunity_cost": 0.03,
+    "concentration_risk": 0.02, "energy_health": 0.01
+  },
+  "extraFactors": [
+    { "id": "visa_status", "label": "Visa status", "question": "Are visas and immigration documents secured?", "defaultWeight": 0 },
+    { "id": "safety_risk", "label": "Safety risk", "question": "Is the destination safe for travelers?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "check_visa", "text": "Confirm visa requirements with the embassy.", "factorIds": ["visa_status", "information_gaps"], "deltaLikelihood": -3, "effort": 2 },
+    { "id": "backup_funds", "text": "Carry a backup credit card and emergency cash.", "factorIds": ["resource_adequacy", "downside_severity"], "deltaLikelihood": -2, "effort": 1 },
+    { "id": "check_advisory", "text": "Check your government's travel advisory for the destination.", "factorIds": ["safety_risk", "external_volatility"], "deltaLikelihood": -2, "effort": 1 }
+  ]
+}

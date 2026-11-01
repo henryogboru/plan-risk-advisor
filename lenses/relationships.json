@@ -1,0 +1,20 @@
+{
+  "id": "relationships", "name": "Relationships & Family", "domain": "relationships",
+  "trigger": { "keywords": ["marriage", "divorce", "partner", "date", "dating", "family", "kids", "children", "move in", "breakup", "wife", "husband", "boyfriend", "girlfriend"], "phrases": ["get married", "have a baby", "move in with"] },
+  "weightOverrides": {
+    "support_opposition": 0.16, "downside_severity": 0.14, "information_gaps": 0.12,
+    "goal_clarity": 0.12, "consistency": 0.10, "external_volatility": 0.08,
+    "resource_adequacy": 0.08, "capability_fit": 0.06, "feedback_visibility": 0.06,
+    "time_feasibility": 0.04, "dependency_exposure": 0.02, "opportunity_cost": 0.01,
+    "concentration_risk": 0.01
+  },
+  "extraFactors": [
+    { "id": "communication", "label": "Communication", "question": "Are both parties aligned on the major issues?", "defaultWeight": 0 },
+    { "id": "legal_marital_status", "label": "Legal status", "question": "Are the legal/financial implications understood (e.g., prenup)?", "defaultWeight": 0 }
+  ],
+  "mitigations": [
+    { "id": "premarital_counseling", "text": "Attend pre-marital or family counseling.", "factorIds": ["communication", "capability_fit"], "deltaLikelihood": -3, "effort": 3 },
+    { "id": "discuss_finances", "text": "Have an open discussion about debts, savings, and financial goals.", "factorIds": ["information_gaps", "goal_clarity"], "deltaLikelihood": -3, "effort": 1 },
+    { "id": "legal_advice", "text": "Consult a family lawyer regarding legal and financial protection.", "factorIds": ["legal_marital_status", "downside_severity"], "deltaLikelihood": -2, "effort": 2 }
+  ]
+}
