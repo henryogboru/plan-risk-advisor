@@ -30,7 +30,8 @@ app.post('/api/assess', async (req, res) => {
       return {
         factorId: f.id, label: f.label, likelihood: L, impact: I,
         weight: w, source: e.source || 'missing', evidence: e.evidence || '',
-        contribution: (w * L * I) / 10
+        contribution: (w * L * I) / 10,
+        rawRisk: Math.round(((L * I) / 10) * 10) / 10
       };
     });
 
@@ -39,9 +40,11 @@ app.post('/api/assess', async (req, res) => {
     const maxFactorRisk = Math.max(...scores.map(s => (s.likelihood * s.impact) / 10));
     
     let riskIndex = averageRisk;
+    let criticalTriggerFired = false;
     if (maxFactorRisk >= 8.5) {
       // Catastrophic single-point failure detected. Bias heavily toward the max danger.
       riskIndex = (maxFactorRisk * 0.7) + (averageRisk * 0.3);
+      criticalTriggerFired = true;
     }
     riskIndex = Math.round(riskIndex * 10) / 10;
     
@@ -58,6 +61,7 @@ app.post('/api/assess', async (req, res) => {
     res.json({
       id, riskIndex, band, confidence, confidenceBand: confBand,
       summary: llmResults.summary || "Analysis complete.",
+      criticalTriggerFired,
       lenses: matched.map(m => ({ id: m.lens.id, match: Math.round(m.match * 100) / 100 })),
       factors: scores.sort((a, b) => b.contribution - a.contribution),
       missingInfo, mitigations: mitigations.slice(0, 5),
@@ -77,4 +81,5 @@ if (process.env.NODE_ENV !== 'production') {
   const PORT = 3000;
   app.listen(PORT, () => console.log(`\n🚀 Web App running at http://localhost:${PORT}\n`));
 }
+
 

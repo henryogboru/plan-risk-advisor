@@ -56,7 +56,10 @@
       <div class="risk-header" id="risk-header"></div>
       <div style="text-align:center; margin-bottom:1rem; color:#666" id="confidence"></div>
       
-      <div class="summary-box" id="summary-container" style="display:none;">
+      <div id="critical-warning" style="display:none; background: #ffebe9; border-left: 4px solid #cf222e; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; color: #82071e; font-weight: bold;">
+      🚨 CRITICAL BLOCKER DETECTED: This plan has a single point of failure severe enough to override the average score.
+    </div>
+    <div class="summary-box" id="summary-container" style="display:none;">
         <button class="btn-speak" onclick="speakSummary()" title="Listen to Summary">🔊</button>
         <div id="summary" style="padding-right: 30px;"></div>
       </div>
@@ -161,6 +164,7 @@ async function assess() {
     const sumContainer = document.getElementById('summary-container');
     if (data.summary) {
       document.getElementById('summary').innerText = data.summary;
+    document.getElementById('critical-warning').style.display = data.criticalTriggerFired ? 'block' : 'none';
       sumContainer.style.display = 'block';
     } else {
       sumContainer.style.display = 'none';
@@ -172,12 +176,12 @@ async function assess() {
         <td>${f.label}</td>
         <td>${f.likelihood}</td>
         <td>${f.impact}</td>
-        <td>${(f.contribution).toFixed(2)}</td>
+        <td>${(f.rawRisk).toFixed(1)}</td>
         <td class="${f.source}">${f.source}</td>
       </tr>
     `).join('');
     document.getElementById('factors').innerHTML = `
-      <tr><th>Factor</th><th>L</th><th>I</th><th>Impact</th><th>Source</th></tr>
+      <tr><th>Factor</th><th>L</th><th>I</th><th>Raw Risk</th><th>Source</th></tr>
       ${tbody}
     `;
 
@@ -219,4 +223,5 @@ async function assess() {
 </script>
 </body>
 </html>
+
 
