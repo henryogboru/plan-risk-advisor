@@ -51,7 +51,7 @@ export function matchLenses(planText: string, lenses: any[]) {
     const ph = (lens.trigger.phrases || []).filter((p: string) => t.includes(p.toLowerCase())).length;
     const match = Math.min(1.0, (kw * 0.25) + (ph * 0.35));
     return { lens, match };
-  }).filter(m => m.match >= 0.25).sort((a, b) => b.match - a.match).slice(0, 3);
+  }).filter(m => m.match >= 0.25).sort((a, b) => b.match - a.match).slice(0, 4);
 }
 
 export function mergeLenses(matched: any[]) {
@@ -100,14 +100,26 @@ export function rankMitigations(mitigations: any[], scores: FactorScore[]) {
   const byId = new Map(scores.map(s => [s.factorId, s]));
   return mitigations.map(m => {
     let red = 0;
+    let isCritical = false;
     m.factorIds.forEach((fid: string) => {
       const s = byId.get(fid);
       if (!s) return;
+      
+      const rawRisk = (s.likelihood * s.impact) / 10;
+      if (rawRisk >= 7.0) isCritical = true; // If it addresses a critical risk, flag it!
+      
       const nL = clamp(s.likelihood + (m.deltaLikelihood || 0));
       const nI = clamp(s.impact + (m.deltaImpact || 0));
       red += (s.weight * s.likelihood * s.impact / 10) - (s.weight * nL * nI / 10);
     });
-    return { ...m, riskReduction: Math.round(red * 100) / 100, efficiency: m.effort > 0 ? red / m.effort : 0 };
-  }).sort((a, b) => b.efficiency - a.efficiency);
+    
+    return { ...m, isCritical, riskReduction: Math.round(red * 100) / 100, efficiency: m.effort > 0 ? red / m.effort : 0 };
+  }).sort((a, b) => {
+    // Critical mitigations always rank first, regardless of weight math
+    if (a.isCritical && !b.isCritical) return -1;
+    if (!a.isCritical && b.isCritical) return 1;
+    return b.efficiency - a.efficiency;
+  });
 }
+
 

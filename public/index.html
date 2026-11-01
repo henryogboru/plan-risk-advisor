@@ -200,8 +200,9 @@ async function assess() {
       document.getElementById('mitigations').innerHTML = `
         <h3 style="color:#1a7f37; margin-top:1.5rem">Top Mitigations</h3>
         ${data.mitigations.map(m => `
-          <div class="mit">
+          <div class="mit" style="${m.isCritical ? 'background:#ffebe9; border-left-color:#cf222e;' : ''}">
             <strong>[Effort ${m.effort}]</strong> ${m.text} 
+            ${m.isCritical ? '<span style="color:#cf222e; font-size:0.8rem; font-weight:bold; margin-left:5px;">(CRITICAL)</span>' : ''}
             <span style="color:#1a7f37; float:right; font-weight:bold">(-${m.riskReduction.toFixed(2)})</span>
           </div>
         `).join('')}
@@ -223,5 +224,6 @@ async function assess() {
 </script>
 </body>
 </html>
+
 
 
